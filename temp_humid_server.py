@@ -5,38 +5,48 @@ import csv
 from datetime import datetime
 
 
-URL =  "http://192.168.0.212/"
-URL2 = "http://192.168.0.204/"
+#Gets data from server and returns as an array
+##[ROOM_NAME, TIME/DATA, TEMP, HUMD]
+def getData(room_url, room_name):
+    #Open server webpage
+    page = requests.get(room_url)
+    soup = BeautifulSoup(page.content, "html.parser")
+
+    #Get temp/humd from server
+    temp = soup.find(id="temperature")
+    humd = soup.find(id="humidity")
+
+    #Get current time
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+
+    data = [room_name, current_time, temp.text, humd.text]
+    return data
+
+#Writes data to CSV file
+def writeData(data, writer):
+    #Write to CSV
+    writer.writerow(data)
+
+    #Write to console
+    print("Room %s|\tTime: %s\tTemp: %s\tHumd: %s"%(data[0], data[1], data[2], data[3]))
+
+room_urls = [["http://192.168.0.212/", "1"], ["http://192.168.0.204", "2"]]
 
 with open('eviro_data.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Room", "Time", "Temperature", "Humidity"])
-    for i in range(0,5):
-        page = requests.get(URL)
-        page2 = requests.get(URL2)
-
-        soup = BeautifulSoup(page.content, 'html.parser')
-        soup2 = BeautifulSoup(page2.content, 'html.parser')
-
-        temp = soup.find(id="temperature")
-        humd = soup.find(id="humidity")
-
-        temp2 = soup2.find(id="temperature")
-        humd2 = soup2.find(id="humidity")
-
-        #Get current time
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-
-        #Write to CSV    
-        writer.writerow(["1", current_time, temp.text, humd.text])
-        writer.writerow(["2", current_time, temp2.text, humd2.text])
-
-        #Write to consol
-        print("~~~~~~~~~~~~~~~")
-        print("Room 1|\tTime: " + current_time + "\tTemp: " + temp.text + "\tHumd: " + humd.text)
-        print("Room 2|\tTime: " + current_time + "\tTemp: " + temp2.text + "\tHumd: " + humd2.text)
+    while True:
+        for url in room_urls:
+            try:
+                data = getData(url[0], url[1])
+                writeData(data, writer)
+                
+            except:
+                print("ERROR: Could not get data for one or more of the rooms. Trying again.")
+                time.sleep(5)
         time.sleep(1)
+        
 
 file.close()
 
