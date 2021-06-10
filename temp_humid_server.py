@@ -3,6 +3,8 @@ import requests
 import time
 import csv
 from datetime import datetime
+from datetime import date
+from os import path
 
 
 #Gets data from server and returns as an array
@@ -33,9 +35,34 @@ def writeData(data, writer):
 
 room_urls = [["http://192.168.0.212/", "1"], ["http://192.168.0.204", "2"]]
 
-with open('eviro_data.csv', 'w', newline='') as file:
+
+#generate filename w/ current date
+today = date.today()
+print("Today's Date: ", today)
+todayTuple = today.timetuple()
+filename = "edata_%s_%s_%s.csv"%(todayTuple.tm_year, todayTuple.tm_mon, todayTuple.tm_mday)
+
+#if name w/ current date DE, copy old data to temp variable
+oldData = []
+if path.exists(filename):
+    with open(filename, 'r', newline='') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            oldData.append(row)
+    file.close()
+print(oldData)
+
+# write data to file
+with open(filename, 'w', newline='') as file:
     writer = csv.writer(file)
-    writer.writerow(["Room", "Time", "Temperature", "Humidity"])
+
+    if not oldData:
+        writer.writerow(["Room", "Time", "Temperature", "Humidity"])
+    else:
+        print("Old file detected. Copying old data...")
+        for row in oldData:
+            writer.writerow(row)
+
     while True:
         for url in room_urls:
             try:
@@ -48,5 +75,5 @@ with open('eviro_data.csv', 'w', newline='') as file:
         time.sleep(1)
         
 
-file.close()
+# file.close()
 
