@@ -20,7 +20,7 @@ def getData(room_url, room_name):
 
     #Get current time
     now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
+    current_time = now.strftime('%D %H:%M:%S')
 
     data = [room_name, current_time, temp.text, humd.text]
     return data
@@ -71,7 +71,7 @@ with open(filename, 'w', newline='') as file:
                 
             except:
                 print("ERROR: Could not get data for one or more of the rooms. Trying again.")
-                time.sleep(5)
+                time.sleep(1)
         time.sleep(1)
         
 
