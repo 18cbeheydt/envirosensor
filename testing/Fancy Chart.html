@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>  
+  <title>North Baker Temperature Sensor</title>
+  <script type="text/javascript">
+  window.onload = function () {
+    var chart1 = new CanvasJS.Chart("chartContainer1",
+    {
+		axisX:{
+  title : "Time"
+ },
+ axisX2:{
+  title : " "
+ },
+ 
+ axisY:{
+  title : "Temperature"
+ },
+ axisY2:{
+  title : " "
+ },
+      title:{
+      text: ""   
+      },
+      data: [
+      {        
+        type: "line",
+        showInLegend: true, 
+        name: "series1",
+        legendText: "Temperature",
+        dataPoints: [
+        { x: 10, y: 71 },
+        { x: 20, y: 55},
+        { x: 30, y: 50 },
+        { x: 40, y: 65 },
+        { x: 50, y: 95 },
+        { x: 60, y: 68 },
+        { x: 70, y: 28 },
+        { x: 80, y: 34 },
+        { x: 90, y: 14}
+      
+        ]
+      },
+        {        
+        type: "line",
+        legendText: "Humidity",
+       name: "series2",
+        showInLegend: true, 
+        dataPoints: [
+        { x: 10, y: 7 },
+        { x: 20, y: 5},
+        { x: 30, y: 5 },
+        { x: 40, y: 16 },
+        { x: 50, y: 9 },
+        { x: 60, y: 61 },
+        { x: 70, y: 18 },
+        { x: 80, y: 14 },
+        { x: 90, y: 24}
+      
+        ]
+      }
+      ]
+    });
+
+    var chart2 = new CanvasJS.Chart("chartContainer2",
+    {
+		axisX:{
+  title : "Time"
+ },
+ axisX2:{
+  title : " "
+ },
+ 
+ axisY:{
+  title : "Temperature"
+ },
+ axisY2:{
+  title : " "
+ },
+      title:{
+      text: ""   
+      },
+      data: [
+      {        
+        type: "line",
+        showInLegend: true, 
+        name: "series1",
+        legendText: "Temperature",
+        dataPoints: [
+        { x: 10, y: 71 },
+        { x: 20, y: 55},
+        { x: 30, y: 50 },
+        { x: 40, y: 65 },
+        { x: 50, y: 95 },
+        { x: 60, y: 68 },
+        { x: 70, y: 28 },
+        { x: 80, y: 34 },
+        { x: 90, y: 14}
+      
+        ]
+      },
+        {        
+        type: "line",
+        legendText: "Humidity",
+       name: "series2",
+        showInLegend: true, 
+        dataPoints: [
+        { x: 10, y: 7 },
+        { x: 20, y: 5},
+        { x: 30, y: 5 },
+        { x: 40, y: 16 },
+        { x: 50, y: 9 },
+        { x: 60, y: 61 },
+        { x: 70, y: 18 },
+        { x: 80, y: 14 },
+        { x: 90, y: 24}
+      
+        ]
+      }
+      ]
+    });
+
+    chart1.render();
+    chart2.render();
+  }
+  </script>
+ <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+ <!--end of first chart-->
+ 
+ </script>
+</head>
+<body>
+  <span style="text-align:center;color:blue"><h1>North Baker Temperature & Humidity Data</h1></span>
+  
+  <center><img src="Union Logo.jpg" width=100px height=100px></span></center>
+
+  <center><h2>Room 1 Data</h2></center> <!-- chart title -->
+
+  <center>
+    
+    <h3>Last Updated:</h3>
+    <p id=lastUpdated1>Pingas</p>
+
+  </center>
+
+  <div id="chartContainer1" style="height: 300px; width: 100%;"></div> <!-- pretty sure the chart is rendered here-->
+  
+<!--Chart 1 ends here-->
+
+<h2>Average Temperature For Hour:</h2>   
+  <p id=temp1>Pingas</p> <!-- Text for averages is displayed based on the script below-->
+
+  <h2>Average Humidity For Hour:</h2> 
+  <p id=humd1>Pingas</p>
+
+<hr>
+
+  <center><h2>Room 2 Data</h2></center>
+  <center>
+    
+    <h3>Last Updated:</h3>
+    <p id=lastUpdated2>Pingas</p>
+
+  </center>
+
+
+    <div id="chartContainer2" style="height: 300px; width: 100%;"></div> <!-- chart 2 -->
+  </div>
+
+<!--Chart 2 ends here-->
+
+  <h2>Average Temperature For Hour:</h2>   
+  <p id=temp2>Pingas</p> <!-- Text for averages is displayed based on the script below-->
+
+  <h2>Average Humidity For Hour:</h2> 
+  <p id=humd2>Pingas</p>
+
+  <script> //average for chart 1 
+  var temperatureAverage1=69; //use this variable when you find the average values later
+  var humidityAverage1=199999; //see above
+  document.getElementById("temp1").innerHTML = temperatureAverage1; //replaces average temperature text
+  document.getElementById("humd1").innerHTML = humidityAverage1; //replaces average humidity text
+  
+  </script>
+
+<script> //average for chart 2 
+  var temperatureAverage2=14; //use this variable when you find the average values later
+  var humidityAverage2=1748; //see above
+  document.getElementById("temp2").innerHTML = temperatureAverage2; //replaces average temperature text
+  document.getElementById("humd2").innerHTML = humidityAverage2; //replaces average humidity text
+  
+  </script>
+  
+
+  <script>
+  var updateTime1=110; //use this variable when we calculate time last updated later for chart 1
+  var updateTime2=111; //use this variable when we calculate time last updated later for chart 2
+  document.getElementById("lastUpdated1").innerHTML = updateTime1; //replaces the text to show last updated time for chart 1
+  document.getElementById("lastUpdated2").innerHTML = updateTime2; //replaces the text to show lat updated time for chart 2 
+  </script>
+
+
+ 
+</body>
+</html>
