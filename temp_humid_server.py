@@ -75,5 +75,5 @@ with open(filename, 'w', newline='') as file:
         time.sleep(1)
         
 
-# file.close()
+file.close()
 
