@@ -1,5 +1,19 @@
 window.onload = function () {
-    main();    
+    main();
+    setCurrentDate(); 
+}
+
+//Sets current date in the html
+function setCurrentDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    // console.log(today)
+    document.getElementById("select-date").max = today;
+    document.getElementById("select-date").value = today;
 }
 
 function main () {
@@ -69,9 +83,6 @@ function main () {
             }
         }
     }
-
-    t = new Date('6/18/2021 16:30:00');
-    console.log(t)
 
 
     //WRITE VALUES
