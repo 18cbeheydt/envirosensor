@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+<!-- <script>
+n =  new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+document.getElementById("select-date").max = y + "-" + m + "/" + d;
+</script> -->
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
 
@@ -14,7 +20,16 @@
 <p>The EnviroSensor is a IoT smarthome system that pulls 
     temperature and humidty data from multiple points throughout a household and registers the data for analysis.</p>
 
-    <div id="chartContainer" style="height: 500px; width: 50%;"></div>
+    <label for="select-date">Select Date</label>
+
+    <input type="date" id="select-date" name="data-start"
+           value="2021-08-18"
+           min="2021-08-18" max="2021-08-19"
+           onChange="main()">
+
+    <div id="chartContainer_temp" style="height: 500px; width: 50%;"></div>
+    <p></p>
+    <div id="chartContainer_humd" style="height: 500px; width: 50%;"></div>
 </body>
 
 

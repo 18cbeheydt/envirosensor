@@ -1,6 +1,9 @@
 window.onload = function () {
+    main();    
+}
 
-    //GET YOUR t and T, H values from CVS
+function main () {
+    //GET YOUR time (t) and temperature (T), Humidity (H) values from CSV
     function httpGet(theUrl)
     {
         var xmlHttp = new XMLHttpRequest();
@@ -8,26 +11,41 @@ window.onload = function () {
         xmlHttp.send( null );
         return xmlHttp.responseText;
     }
+    //Choose a date that determines the csv file that the data is retrieved from
+    var selected_date = document.getElementById("select-date").value.split("-");
+    //Convoluted way to get rid of 0's in day numbers
+    if(selected_date[1].includes("0")){
+        selected_date[1] = selected_date[1].split("0")[1]; 
+    }
+    selected_date = selected_date[0] + '_' + selected_date[1] + '_' + selected_date[2];
+    console.log(selected_date)
+
+    dataPath = 'http://localhost:5500/data/edata_' + selected_date + '.csv';
+
+
+    //Get particular day edata_YYYY_M_DD
+    var response = httpGet(dataPath);
+    var data = response.split("\n"); //Remove new line characters
     
-    var response = httpGet('http://localhost:5500/edata_2021_6_18.csv');//httpGet('http://192.168.43.41:1880/data.csv');
-    var data = response.split("\n");
+    //I think this adds spacing to the data? Like a whitespace
     var dataArray = [], size = 1;
     while (data.length > 0){
-          dataArray.push(data.splice(0, size));
+        dataArray.push(data.splice(0, size));
         }
 
-    var data = [];
+    var data = []; //wipes data variable
 
-    numRooms = 0;
+    numRooms = 0; //Start with 0 rooms and find the total number from data
     for (var i = 0; i < dataArray.length; i++) {
-      data[i] = dataArray[i].toString().split(",");
-      if(data[i][0] > numRooms){
-          numRooms = data[i][0];
-      }
+    data[i] = dataArray[i].toString().split(","); //Sets data[i] to an array of data for a particular time
+    if(data[i][0] > numRooms){
+        numRooms = data[i][0]; //Adds more rooms if larger room num detected
+    }
     }
     //console.log(numRooms);
 
     //Init Data Vals
+    //For each room, push numRoom empty arrays into each timeVals, tempVals, humdVals representing a data column for each room
     var timeVals = [];
     var tempVals = [];
     var humdVals = [];
@@ -41,70 +59,98 @@ window.onload = function () {
     for (var i = 0; i < data.length; i++){
         for(var j = 0; j < numRooms+1; j++){
             if(j+1 == data[i][0]){
-                console.log(data[i][1])
-                newT = new Date(data[i][1].substr(1,data[i][1].length));
+                //console.log(data[i][1])
+                newT = new Date(data[i][1].substr(1,data[i][1].length)); //Parse time from data
                 
-                console.log(data[i][1].substr(1,data[i][1].length))
+                // console.log(data[i][1].substr(1,data[i][1].length))
                 timeVals[j].push(newT); //Time
                 tempVals[j].push(data[i][2]); //Temp
                 humdVals[j].push(data[i][3].substr(0,data[i][3].length-2)); //Humidty
             }
         }
     }
-    // console.log(timeVals);
-    // console.log(tempVals);
-    // console.log(humdVals);
-
-    console.log(timeVals[0][1])
-    console.log(Date.parse(timeVals[0][1]))
-    // function convert(input) {
-    //     return moment(input, 'HH:mm:ss').format('h:mm:ss A');
-    // }
-    
-    // console.log(convert('20:00:00'));
-    // console.log(convert('08:00:00'));
-    // console.log(convert('16:30:00'));
 
     t = new Date('6/18/2021 16:30:00');
     console.log(t)
 
 
     //WRITE VALUES
-    dataPPS = [];
-    dataPPS2 = [];
+    dataTempPPS1 = [];
+    dataTempPPS2 = [];
     for(i = 0; i < timeVals[0].length; i++){
-        dataPPS[i] = {x: timeVals[0][i], y: parseFloat(tempVals[0][i])};
+        dataTempPPS1[i] = {x: timeVals[0][i], y: parseFloat(tempVals[0][i])};
     }
     for(i = 0; i < timeVals[0].length; i++){
-        dataPPS2[i] = {x: timeVals[0][i], y: parseFloat(tempVals[1][i])};
+        dataTempPPS2[i] = {x: timeVals[0][i], y: parseFloat(tempVals[1][i])};
     }
-    console.log(dataPPS)
-    console.log(tempVals[1])
+
+    dataHumdPPS1 = [];
+    dataHumdPPS2 = [];
+    for(i = 0; i< timeVals[0].length; i++){
+        dataHumdPPS1[i] = {x: timeVals[0][i], y: parseFloat(humdVals[0][i])}
+    }
+    for(i = 0; i< timeVals[0].length; i++){
+        dataHumdPPS2[i] = {x: timeVals[0][i], y: parseFloat(humdVals[1][i])}
+    }
+
+    console.log(dataHumdPPS1);
+
+    // console.log(dataTempPPS1)
+    // console.log(tempVals[1])
     var x = new Date(timeVals[0][1])
     console.log(x)
 
-    //GET YOUR t and T, H values from CVS
+    //GET YOUR t and T, H values from CSV
 
 
 
     //PLOT VALUES
-    var chart = new CanvasJS.Chart("chartContainer", {
+    var tempChart = new CanvasJS.Chart("chartContainer_temp", {
+        title:{
+            text: "Temperature"   
+            },
         data: [
         {
             type: "line",
-            dataPoints: dataPPS
+            dataPoints: dataTempPPS1,
+            legendText: "Living Room",
+            showInLegend: true
             
         },
         {
             type: "line",
-            dataPoints: dataPPS2
+            dataPoints: dataTempPPS2,
+            legendText: "Connor's Room",
+            showInLegend: true
             
         }
     ]
+    });
 
-
+    var humdChart = new CanvasJS.Chart("chartContainer_humd", {
+        title:{
+            text: "Humidity"   
+            },
+        data: [
+        {
+            type: "line",
+            dataPoints: dataHumdPPS1,
+            legendText: "Living Room",
+            showInLegend: true
+            
+        },
+        {
+            type: "line",
+            dataPoints: dataHumdPPS2,
+            legendText: "Connor's Room",
+            showInLegend: true
+            
+            
+        }
+    ]
     });
     
 
-    chart.render();
+    tempChart.render();
+    humdChart.render();
 }
